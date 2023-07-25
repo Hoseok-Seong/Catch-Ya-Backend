@@ -1,13 +1,22 @@
 package com.example.catchya.global.security;
 
 import com.example.catchya.user.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public record MyUserDetails(User user) implements UserDetails {
+@Getter
+public class MyUserDetails implements UserDetails {
+
+    private User user;
+
+    public MyUserDetails(User user) {
+        this.user = user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();

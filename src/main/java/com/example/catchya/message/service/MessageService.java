@@ -23,8 +23,8 @@ public class MessageService {
     @Transactional
     public ResponseEntity<?> insertMessage(MyUserDetails myUserDetails,
                                            MessageInsertReq messageInsertReq) {
-        if(!messageInsertReq.username().equals(myUserDetails.getUsername())) {
-            return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
+        if(!Objects.equals(messageInsertReq.userId(), myUserDetails.getUser().getId())) {
+            return ResponseEntity.badRequest().body("유저 아이디가 달라서 권한 실패");
         }
 
         Message message = messageRepository.save(messageInsertReq.toEntity());
@@ -35,13 +35,12 @@ public class MessageService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getMessages(MyUserDetails myUserDetails,
                                          MessageFindReq messageFindReq) {
-        if(!messageFindReq.username().equals(myUserDetails.getUsername())) {
-            return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
+        if(!Objects.equals(messageFindReq.userId(), myUserDetails.getUser().getId())) {
+            return ResponseEntity.badRequest().body("유저 아이디가 달라서 권한 실패");
         }
 
-        List<Message> messages = messageRepository.findByUsername(messageFindReq.username());
+        List<Message> messages = messageRepository.findMessagesByUserId(messageFindReq.userId());
 
         return ResponseEntity.ok().body(new MessageFindResp(messages));
     }
-
 }

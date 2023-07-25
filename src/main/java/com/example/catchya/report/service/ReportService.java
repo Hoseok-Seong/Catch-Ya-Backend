@@ -23,8 +23,8 @@ public class ReportService {
     @Transactional
     public ResponseEntity<?> insertReport(MyUserDetails myUserDetails,
                                           ReportInsertReq reportInsertReq) {
-        if(!reportInsertReq.username().equals(myUserDetails.getUsername())) {
-            return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
+        if(!Objects.equals(reportInsertReq.userId(), myUserDetails.getUser().getId())) {
+            return ResponseEntity.badRequest().body("유저 아이디가 달라서 권한 실패");
         }
 
         Report report = reportRepository.save(reportInsertReq.toEntity());
@@ -35,11 +35,11 @@ public class ReportService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getReports(MyUserDetails myUserDetails,
                                         ReportFindReq reportFindReq) {
-        if(!reportFindReq.username().equals(myUserDetails.getUsername())) {
-            return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
+        if(!Objects.equals(reportFindReq.userId(), myUserDetails.getUser().getId())) {
+            return ResponseEntity.badRequest().body("유저 아이디가 달라서 권한 실패");
         }
 
-        List<Report> report = reportRepository.findByUsername(reportFindReq.username());
+        List<Report> report = reportRepository.findReportsByUserId(reportFindReq.userId());
 
         return ResponseEntity.ok().body(new ReportFindResp(report));
     }

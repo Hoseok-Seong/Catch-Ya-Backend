@@ -19,15 +19,15 @@ public class Message extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String username;
+    private Long userId;
     @Column(nullable = false)
     private String phone;
     @Column(nullable = false)
     private String content;
 
     @Builder
-    public Message(String username, String phone, String content) {
-        this.username = username;
+    public Message(Long userId, String phone, String content) {
+        this.userId = userId;
         this.phone = phone;
         this.content = content;
     }

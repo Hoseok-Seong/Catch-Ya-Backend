@@ -66,7 +66,7 @@ public class UserService {
 
     @Transactional
     public ResponseEntity<?> update(MyUserDetails myUserDetails, UserUpdateReq userUpdateReq) {
-        User user = userRepository.findById(myUserDetails.user().getId())
+        User user = userRepository.findById(myUserDetails.getUser().getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다"));
 
         user.update(userUpdateReq.password());

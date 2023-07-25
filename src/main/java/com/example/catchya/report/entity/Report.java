@@ -19,13 +19,13 @@ public class Report extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String username;
+    private Long userId;
     @Column(nullable = false)
     private String content;
 
     @Builder
-    public Report(String username, String content) {
-        this.username = username;
+    public Report(Long userId, String content) {
+        this.userId = userId;
         this.content = content;
     }
 }
