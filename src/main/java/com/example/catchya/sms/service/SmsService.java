@@ -52,7 +52,7 @@ public class SmsService {
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 메세지가 없습니다"));
 
-        if (message.getUsername().equals(myUserDetails.getUsername())) {
+        if (!Objects.equals(message.getUserId(), myUserDetails.getUser().getId())) {
             throw new AccessDeniedException("해당 메세지의 소유자가 아닙니다");
         }
 

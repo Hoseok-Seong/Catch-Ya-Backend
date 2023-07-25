@@ -1,6 +1,7 @@
 package com.example.catchya.sms.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ public class SmsInsertReq {
     private String additionalContent;
     @NotBlank(message = "예약시간을 입력해주세요")
     private String reserveTime;
-    @NotBlank(message = "messageId를 입력해주세요")
+    @NotNull(message = "messageId를 입력해주세요")
     private Long messageId;
 
     @AllArgsConstructor
