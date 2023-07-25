@@ -23,7 +23,7 @@ public class ReportService {
     @Transactional
     public ResponseEntity<?> insertReport(MyUserDetails myUserDetails,
                                           ReportInsertReq reportInsertReq) {
-        if(!Objects.equals(reportInsertReq.username(), myUserDetails.getUsername())) {
+        if(reportInsertReq.username().equals(myUserDetails.getUsername())) {
             return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
         }
 
@@ -35,7 +35,7 @@ public class ReportService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getReports(MyUserDetails myUserDetails,
                                         ReportFindReq reportFindReq) {
-        if(!Objects.equals(reportFindReq.username(), myUserDetails.getUsername())) {
+        if(reportFindReq.username().equals(myUserDetails.getUsername())) {
             return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
         }
 
