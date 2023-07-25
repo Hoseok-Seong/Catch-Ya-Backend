@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class SmsInsertReq {
-    private String to;
-    private String content;
+    private String additionalContent;
     private String reserveTime;
     private Long messageId;
 

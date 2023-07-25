@@ -39,7 +39,9 @@ public class SmsService {
     private final MessageRepository messageRepository;
 
     @Transactional
-    public SmsInsertResp sendSMS(MyUserDetails myUserDetails, String reserveTime, Long messageId) throws JsonProcessingException, InvalidKeyException,
+    public SmsInsertResp sendSMS(MyUserDetails myUserDetails,
+                                 String reserveTime, Long messageId,
+                                 String additionalContent) throws JsonProcessingException, InvalidKeyException,
             IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException {
 
         long elapsedTimeMillis = Instant.now().toEpochMilli();
@@ -54,8 +56,16 @@ public class SmsService {
             throw new AccessDeniedException("해당 메세지의 소유자가 아닙니다");
         }
 
+        String finalMessage;
+
+        if (additionalContent != null) {
+            finalMessage = message.getContent() + "\n" + additionalContent;
+        } else {
+            finalMessage = message.getContent();
+        }
+
         List<SmsInsertReq.MessageDto> messages = new ArrayList<>();
-        messages.add(new SmsInsertReq.MessageDto(message.getPhone(), message.getContent()));
+        messages.add(new SmsInsertReq.MessageDto(message.getPhone(), finalMessage));
 
         LocalDateTime currentTime = LocalDateTime.now();
 

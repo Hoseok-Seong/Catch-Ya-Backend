@@ -27,7 +27,9 @@ public class SmsController {
     @PostMapping("/api/sms/send")
     public ResponseEntity<SmsInsertResp> sendSMS(@AuthenticationPrincipal MyUserDetails myUserDetails,
                                                  @RequestBody SmsInsertReq smsInsertReq) throws JsonProcessingException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, ExecutionException, JsonProcessingException {
-        SmsInsertResp data = smsService.sendSMS(myUserDetails, smsInsertReq.getReserveTime(), smsInsertReq.getMessageId());
+        SmsInsertResp data = smsService.sendSMS(myUserDetails,
+                smsInsertReq.getReserveTime(), smsInsertReq.getMessageId(),
+                smsInsertReq.getAdditionalContent());
         return ResponseEntity.ok().body(data);
     }
 
