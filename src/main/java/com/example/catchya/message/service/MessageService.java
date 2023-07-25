@@ -23,7 +23,7 @@ public class MessageService {
     @Transactional
     public ResponseEntity<?> insertMessage(MyUserDetails myUserDetails,
                                            MessageInsertReq messageInsertReq) {
-        if(messageInsertReq.username().equals(myUserDetails.getUsername())) {
+        if(!messageInsertReq.username().equals(myUserDetails.getUsername())) {
             return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
         }
 
@@ -35,7 +35,7 @@ public class MessageService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getMessages(MyUserDetails myUserDetails,
                                          MessageFindReq messageFindReq) {
-        if(messageFindReq.username().equals(myUserDetails.getUsername())) {
+        if(!messageFindReq.username().equals(myUserDetails.getUsername())) {
             return ResponseEntity.badRequest().body("유저 이름이 일치하지 않습니다");
         }
 
