@@ -77,10 +77,14 @@ public class SmsService {
 
         if (Math.abs(timeDifferenceMillis ) <= 10 * 60 * 1000) {
             throw new IllegalArgumentException("예약시간은 현재시간으로부터 10분 이후여야 합니다");
-        } else {
-            return sendSms.sendSmsMoreThan10Minutes(messages,
-                    reserveTime, timestamp, signature, apiUrl);
         }
+
+        if (timeDifferenceMillis < 0) {
+            throw new IllegalArgumentException("예약시간은 현재시간보다 과거일 수 없습니다");
+        }
+
+        return sendSms.sendSmsMoreThan10Minutes(messages,
+                    reserveTime, timestamp, signature, apiUrl);
     }
 
     @Transactional
