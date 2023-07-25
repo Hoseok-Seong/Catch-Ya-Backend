@@ -11,6 +11,7 @@ public class SmsInsertReq {
     private String to;
     private String content;
     private String reserveTime;
+    private Long messageId;
 
     @AllArgsConstructor
     @NoArgsConstructor

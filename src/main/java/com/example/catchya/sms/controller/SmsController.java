@@ -1,5 +1,6 @@
 package com.example.catchya.sms.controller;
 
+import com.example.catchya.global.security.MyUserDetails;
 import com.example.catchya.sms.dto.SmsCancelReq;
 import com.example.catchya.sms.dto.SmsInsertReq;
 import com.example.catchya.sms.dto.SmsInsertResp;
@@ -7,6 +8,7 @@ import com.example.catchya.sms.service.SmsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +25,9 @@ public class SmsController {
     private final SmsService smsService;
 
     @PostMapping("/api/sms/send")
-    public ResponseEntity<SmsInsertResp> sendSMS(@RequestBody SmsInsertReq smsInsertReq) throws JsonProcessingException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, ExecutionException, JsonProcessingException {
-        SmsInsertResp data = smsService.sendSMS(smsInsertReq.getTo(),
-                smsInsertReq.getContent(), smsInsertReq.getReserveTime());
+    public ResponseEntity<SmsInsertResp> sendSMS(@AuthenticationPrincipal MyUserDetails myUserDetails,
+                                                 @RequestBody SmsInsertReq smsInsertReq) throws JsonProcessingException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, ExecutionException, JsonProcessingException {
+        SmsInsertResp data = smsService.sendSMS(myUserDetails, smsInsertReq.getReserveTime(), smsInsertReq.getMessageId());
         return ResponseEntity.ok().body(data);
     }
 
