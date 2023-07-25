@@ -1,10 +1,13 @@
 package com.example.catchya.user.service;
 
 import com.example.catchya.global.jwt.MyJwtProvider;
+import com.example.catchya.global.security.MyUserDetails;
 import com.example.catchya.user.dto.UserJoinReq;
 import com.example.catchya.user.dto.UserJoinResp;
 import com.example.catchya.user.dto.UserLoginReq;
 import com.example.catchya.user.dto.UserLoginResp;
+import com.example.catchya.user.dto.UserUpdateReq;
+import com.example.catchya.user.dto.UserUpdateResp;
 import com.example.catchya.user.entity.User;
 import com.example.catchya.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +62,15 @@ public class UserService {
         }
 
         throw new RuntimeException("패스워드 유효성 실패");
+    }
+
+    @Transactional
+    public ResponseEntity<?> update(MyUserDetails myUserDetails, UserUpdateReq userUpdateReq) {
+        User user = userRepository.findById(myUserDetails.user().getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다"));
+
+        user.update(userUpdateReq.password());
+
+        return ResponseEntity.ok().body(new UserUpdateResp(user));
     }
 }
