@@ -11,12 +11,13 @@ POST: localhost:8080/api/sms/send
     "messageId" : 5
 }
 
+* 문자 전송은 알람이 꺼지는 시간을 감안해서 예약시간의 3분 이후로 발송됩니다
+
 ## 문자 예약 취소 API 요청 예시
 
 DELETE: localhost:8080/api/sms/cancel
 
-{   
-    "userId" : 1,
+{   "userId" : 1,
     "requestId" : "RSSA-1690283255957-5717-57645231-roxmBCUD"
 }
 
