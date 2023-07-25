@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import com.example.catchya.sms.dto.SmsInsertReq;
@@ -51,11 +50,10 @@ public class SmsService {
 
         long timeDifferenceMillis  = ChronoUnit.MILLIS.between(currentTime, targetTime);
 
-        if (Math.abs(timeDifferenceMillis ) <= 11 * 60 * 1000) {
-            CompletableFuture<SmsInsertResp> smsInsertRespFuture = sendSms.sendSmsWithin11Minutes(timeDifferenceMillis, messages, timestamp, signature, apiUrl);
-            return smsInsertRespFuture.get();
+        if (Math.abs(timeDifferenceMillis ) <= 10 * 60 * 1000) {
+            throw new IllegalArgumentException("예약시간은 현재시간으로부터 10분 이후여야 합니다");
         } else {
-            return sendSms.sendSmsMoreThan11Minutes(messages, reserveTime, timestamp, signature, apiUrl);
+            return sendSms.sendSmsMoreThan10Minutes(messages, reserveTime, timestamp, signature, apiUrl);
         }
     }
 

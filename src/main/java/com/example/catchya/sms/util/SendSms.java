@@ -12,12 +12,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -28,36 +28,19 @@ public class SendSms {
 
     private final RestTemplate restTemplate;
 
-    @Async
-    public CompletableFuture<SmsInsertResp> sendSmsWithin11Minutes(long timeDifferenceMillis,
-                                                                   List<SmsInsertReq.MessageDto> messages,
-                                                                   String timestamp,
-                                                                   String signature,
-                                                                   String apiUrl) throws JsonProcessingException {
-        try {
-            Thread.sleep(timeDifferenceMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        SmsApiDto smsReq = SmsApiDto.builder()
-                .type("SMS")
-                .contentType("COMM")
-                .countryCode("82")
-                .from(phoneNumber)
-                .content("캣챠 앱에서 보내는 긴급신고 문자입니다")
-                .messages(messages)
-                .build();
-
-        return CompletableFuture.completedFuture(getSmsInsertResp(timestamp, signature, apiUrl, smsReq));
-    }
-
-    public SmsInsertResp sendSmsMoreThan11Minutes(List<SmsInsertReq.MessageDto> messages,
+    public SmsInsertResp sendSmsMoreThan10Minutes(List<SmsInsertReq.MessageDto> messages,
                                                   String reserveTime,
                                                   String timestamp,
                                                   String signature,
                                                   String apiUrl) throws JsonProcessingException {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(reserveTime, formatter);
+
+        // 알람이 꺼지는 시간을 감안해서 3분 이후로 발송한다
+        LocalDateTime afterAdding3Minutes = dateTime.plusMinutes(3);
+        String finalReserveTime = afterAdding3Minutes.format(formatter);
+
         SmsApiDto smsReq = SmsApiDto.builder()
                 .type("SMS")
                 .contentType("COMM")
@@ -65,7 +48,7 @@ public class SendSms {
                 .from(phoneNumber)
                 .content("캣챠 앱에서 보내는 긴급신고 문자입니다")
                 .messages(messages)
-                .reserveTime(reserveTime)
+                .reserveTime(finalReserveTime)
                 .reserveTimeZone("Asia/Seoul")
                 .build();
 
