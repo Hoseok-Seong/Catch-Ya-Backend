@@ -1,5 +1,6 @@
 package com.example.catchya.user.controller;
 
+import com.example.catchya.user.dto.UserJoinReq;
 import com.example.catchya.user.dto.UserLoginReq;
 import com.example.catchya.user.service.UserService;
 import jakarta.validation.Valid;
@@ -18,5 +19,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserLoginReq userLoginReq) {
         return userService.login(userLoginReq);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody @Valid UserJoinReq userJoinReq) {
+        return userService.join(userJoinReq);
     }
 }
