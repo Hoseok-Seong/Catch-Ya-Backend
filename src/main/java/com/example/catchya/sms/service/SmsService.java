@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import com.example.catchya.global.security.MyUserDetails;
 import com.example.catchya.message.entity.Message;
 import com.example.catchya.message.repository.MessageRepository;
+import com.example.catchya.sms.dto.SmsCancelReq;
 import com.example.catchya.sms.dto.SmsInsertReq;
 import com.example.catchya.sms.dto.SmsInsertResp;
 import com.example.catchya.sms.util.SendSms;
@@ -83,13 +84,17 @@ public class SmsService {
     }
 
     @Transactional
-    public ResponseEntity<?> cancelSMS(String requestId) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity<?> cancelSMS(MyUserDetails myUserDetails, SmsCancelReq smsCancelReq) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+
+        if (!Objects.equals(smsCancelReq.getUserId(), myUserDetails.getUser().getId())) {
+            throw new AccessDeniedException("해당 예약된 메세지의 소유자가 아닙니다");
+        }
 
         long elapsedTimeMillis = Instant.now().toEpochMilli();
         String timestamp = String.valueOf(elapsedTimeMillis);
-        String signature = SignatureUtil.makeSignatureForCancel(timestamp, serviceId, accessKey, secretKey, requestId);
+        String signature = SignatureUtil.makeSignatureForCancel(timestamp, serviceId, accessKey, secretKey, smsCancelReq.getRequestId());
         String apiUrl = "https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId +
-                "/reservations/" + requestId;
+                "/reservations/" + smsCancelReq.getRequestId();
 
         return sendSms.getSmsCancelResp(timestamp, signature, apiUrl);
     }

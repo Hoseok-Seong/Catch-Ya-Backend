@@ -6,6 +6,7 @@ import com.example.catchya.sms.dto.SmsInsertReq;
 import com.example.catchya.sms.dto.SmsInsertResp;
 import com.example.catchya.sms.service.SmsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,7 +27,7 @@ public class SmsController {
 
     @PostMapping("/api/sms/send")
     public ResponseEntity<SmsInsertResp> sendSMS(@AuthenticationPrincipal MyUserDetails myUserDetails,
-                                                 @RequestBody SmsInsertReq smsInsertReq) throws JsonProcessingException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, ExecutionException, JsonProcessingException {
+                                                 @RequestBody @Valid SmsInsertReq smsInsertReq) throws JsonProcessingException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException, NoSuchAlgorithmException, ExecutionException, InterruptedException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, ExecutionException, JsonProcessingException {
         SmsInsertResp data = smsService.sendSMS(myUserDetails,
                 smsInsertReq.getReserveTime(), smsInsertReq.getMessageId(),
                 smsInsertReq.getAdditionalContent());
@@ -34,7 +35,8 @@ public class SmsController {
     }
 
     @DeleteMapping("/api/sms/cancel")
-    public ResponseEntity<?> cancelSMS(@RequestBody SmsCancelReq smsCancelReq) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        return ResponseEntity.ok().body(smsService.cancelSMS(smsCancelReq.getRequestId()));
+    public ResponseEntity<?> cancelSMS(@AuthenticationPrincipal MyUserDetails myUserDetails,
+                                       @RequestBody @Valid SmsCancelReq smsCancelReq) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        return ResponseEntity.ok().body(smsService.cancelSMS(myUserDetails, smsCancelReq));
     }
 }
