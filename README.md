@@ -28,7 +28,7 @@ GET : localhost:8080/api/police
 {
     "latitude" : 35.1744657,
     "longitude" : 129.0625562,
-    "radius" : "1"
+    "radius" : 1
 }
 
 * radius의 단위는 km
